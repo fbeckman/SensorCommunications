@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../ESPNowSender"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"name": "LoRaSender",
+			"path": "../../LoRaSender"
+		},
+		{
+			"name": "Projects",
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}
