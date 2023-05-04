@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "ESPNowLoRaGateway"
+		},
+		{
+			"path": "ESPNowSender"
+		},
+		{
+			"path": "LoRaSender"
+		}
+	],
+	"settings": {}
+}
