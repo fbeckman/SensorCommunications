@@ -18,7 +18,7 @@ ADC_MODE(ADC_VCC); // activate onboard measurement of battery voltage
 
 typedef struct messageToBeSent {
   byte id;
-  short temperature;
+  signed short temperature;
   short humidity;
   short voltage;
 } struct_message;

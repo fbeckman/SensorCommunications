@@ -30,12 +30,12 @@ Influxdb influx(INFLUXDB_HOST);
 #define ESP_OK 0
 typedef struct messageToBeReceived {
   byte id;
-  short temperature;
+  signed short temperature;
   short humidity;
   short voltage;
 } struct_message;
 
-#define lowBattery 3.3f
+#define lowBattery 2.95f
 
 messageToBeReceived incomingReadings;
 volatile bool doReadESPNow = false; // Flag set by callback to perform read process in main loop
