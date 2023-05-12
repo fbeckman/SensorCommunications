@@ -3,7 +3,7 @@
 #include <espnow.h>
 #include <DHT.h>
 
-#define BOARD_ID 8
+#define BOARD_ID 12
 
 // RECEIVER (gateway) MAC Address
 //uint8_t receiverAddress[] = {0x5C, 0xCF, 0x7F, 0xA2, 0xCA, 0x82}; //Breadboard NodeMCU
