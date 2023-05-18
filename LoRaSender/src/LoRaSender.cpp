@@ -6,12 +6,12 @@
 
 #define SS D8
 #define RST D3
-#define DIO0 D2
+#define DIO0 D1
 
-#define BOARD_ID 10
+#define BOARD_ID 13
 
-// Use DHT11 sensor at D1
-#define DHTPIN D1
+// Use DHT11 sensor at D2
+#define DHTPIN D2
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 

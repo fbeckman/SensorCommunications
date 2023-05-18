@@ -7,18 +7,10 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <LoRa.h>
-#include <UniversalTelegramBot.h>
-#include <WiFiClientSecure.h>
 
 // WiFi parameters
-//const char* ssid = "see Credentials.h";
-//const char* password = "see Credentials.h";
-
-// Telegram bot credentials
-//#define botToken "see Credentials.h"
-//#define userID "see Credentials.h"
-WiFiClientSecure client;
-UniversalTelegramBot bot(botToken, client);
+const char* ssid = "see Credentials.h";
+const char* password = "see Credentials.h";
 
 //#define INFLUXDB_HOST "see Credentials.h"
 Influxdb influx(INFLUXDB_HOST);
@@ -77,10 +69,6 @@ void writeToInfluxDB() {
   Serial.printf("humidity: %4.2f \n", humidity);
   Serial.printf("voltage: %4.2f \n", voltage);
   Serial.println();
-
-  if (voltage < lowBattery) {
-    bot.sendMessage(userID, "Niedrige Batteriespannung an Sensor" + String(incomingReadings.id) + ": " + String(voltage) + "V.", "");
-  }
 }
 
 void setupLoRa() {
@@ -112,15 +100,32 @@ void setupESPNow() {
   esp_now_register_recv_cb(onReceiveESPNow);
 }
 
-void setup() {
-  // Initialize Serial Monitor
-  Serial.begin(115200);
-
-  client.setInsecure();  // For Telegram communication
-
+void setupWiFi(){
+  int n = WiFi.scanNetworks();
+  int found = 0;
+  
   // Set the device as a Station and Soft Access Point simultaneously
   WiFi.mode(WIFI_AP_STA);
-  
+
+  for (int i = 0; i < n; ++i) {
+    if (WiFi.SSID(i)== ssid1 ) {
+      ssid = ssid1;
+      password = password1;
+      found = 1;
+      break;
+    }
+    if (WiFi.SSID(i)== ssid2) {
+      ssid = ssid2;
+      password = password2;
+      found = 1;
+      break;
+    }
+  }
+  if (found == 0) {
+    Serial.println("No known network found. Please try later again.");
+    exit(0);
+  }
+ 
   // Set device as a Wi-Fi Station
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -132,7 +137,14 @@ void setup() {
   Serial.print("Wi-Fi Channel: ");
   Serial.println(WiFi.channel());
   Serial.print("Station MAC Address: ");
-  Serial.println(WiFi.macAddress());
+  Serial.println(WiFi.macAddress());   
+}
+
+void setup() {
+  // Initialize Serial Monitor
+  Serial.begin(115200);
+  
+  setupWiFi();
 
   setupESPNow();
   setupLoRa();

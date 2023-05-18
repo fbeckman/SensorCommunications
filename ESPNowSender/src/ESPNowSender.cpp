@@ -3,7 +3,7 @@
 #include <espnow.h>
 #include <DHT.h>
 
-#define BOARD_ID 12
+#define BOARD_ID 13
 
 // RECEIVER (gateway) MAC Address
 //uint8_t receiverAddress[] = {0x5C, 0xCF, 0x7F, 0xA2, 0xCA, 0x82}; //Breadboard NodeMCU
@@ -36,7 +36,7 @@ void setup() {
   // Reading temperature and humidity
   myMessageToBeSent.humidity = (short)(dht.readHumidity()*100);
   // Read temperature as Celsius
-  myMessageToBeSent.temperature = (short)(dht.readTemperature()*100);
+  myMessageToBeSent.temperature = (signed short)(dht.readTemperature()*100);
   if (isnan(myMessageToBeSent.humidity) || isnan(myMessageToBeSent.temperature)) {
     gotoSleep();
   } 
