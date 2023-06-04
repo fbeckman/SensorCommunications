@@ -16,3 +16,25 @@ Die Zeitintervalle zwischen den Messungen können je nach den Anforderungen und 
 Der Wechsel in den Stromsparmodus zwischen den Messungen hilft dabei, die Batterielebensdauer der Sensoren zu verlängern. Da die Sensoren normalerweise für eine längere Zeit im Ruhemodus verbringen, bevor sie wieder aktiv werden, können sie über einen längeren Zeitraum betrieben werden, ohne dass die Batterien ausgetauscht oder aufgeladen werden müssen. Dies ist besonders vorteilhaft in Situationen, in denen der Zugang zu den Sensoren erschwert sein kann oder in Umgebungen, in denen eine regelmäßige Wartung der Batterien nicht praktikabel ist.
 
 Durch die Kombination der regelmäßigen Messungen mit dem Stromsparmodus wird eine effiziente und zuverlässige Überwachung der Kühlgeräte im Laden gewährleistet, während gleichzeitig die Lebensdauer der Sensorenbatterien maximiert wird.
+
+Die Sensormodule basieren auf dem ESP8266 Mikrocontroller, einem weit verbreiteten und leistungsstarken Mikrocontroller für IoT-Anwendungen. Sie sind mit DHT11 Sensoren ausgestattet, die speziell für die Erfassung von Temperatur- und Luftfeuchtigkeitsdaten entwickelt wurden. Der ESP8266 Mikrocontroller ermöglicht die einfache Kommunikation mit den Sensoren und die Übertragung der erfassten Daten über ESPnow oder LoRa zum Gateway.
+
+Für die Stromversorgung der Sensormodule werden 3,7V LiIon Akkus und 1,5V AAA LiIon Akkus verwendet. Diese Akkus bieten eine zuverlässige und langlebige Stromversorgung für die Sensoren. Die Verwendung von wiederaufladbaren LiIon Akkus ermöglicht es, die Batterien wiederholt aufzuladen und somit den Bedarf an häufigem Batteriewechsel zu reduzieren.
+
+Das Gateway, das die Kommunikation zwischen den Sensormodulen und der InfluxDB-Datenbank ermöglicht, ist ebenfalls auf dem ESP8266 Mikrocontroller basiert. Es fungiert als zentraler Knotenpunkt, der die Messdaten von den Sensoren empfängt und sie zur weiteren Verarbeitung und Speicherung an die Datenbank sendet.
+
+Die InfluxDB-Datenbank und die Dashboards werden auf einem Raspberry Pi installiert. Der Raspberry Pi ist ein beliebter und vielseitiger Einplatinencomputer, der häufig in IoT-Anwendungen eingesetzt wird. Er bietet genügend Rechenleistung und Speicherplatz, um die InfluxDB-Datenbank zu hosten und die Grafana-Dashboards auszuführen.
+
+Die Entwicklungsumgebung für die Programmierung der Sensormodule und des Gateways ist Visual Studio Code, eine weit verbreitete und leistungsstarke Code-Editor-Plattform. Die Entwicklungsumgebung wird mit dem Plugin PlatformIO erweitert, das speziell für die Entwicklung von Mikrocontroller-basierten Projekten entwickelt wurde. PlatformIO bietet eine integrierte Entwicklungsumgebung mit Tools zur Programmierung, Fehlerbehebung und Überwachung von Mikrocontrollern.
+
+Durch die Kombination von ESP8266 Mikrocontrollern, DHT11 Sensoren, LiIon Akkus, Raspberry Pi, InfluxDB, Grafana und der Entwicklungsumgebung Visual Studio Code mit PlatformIO entsteht eine robuste und leistungsstarke Anwendung zur Überwachung der Kühlgeräte in einem Laden.
+
+Zum Erstellen dieser Beschreibung wurde ChatGPT verwendet.
+
+Folgende Prompts führten zu dem Ergebnis:
+
+- beschreibe eine Anwendung, die mit Hilfe von batteriebetriebenen Temperatur- und Luftfeuchtigkeitsensoren die Kühlgeräte in einem Laden aufzeichnet. Die Sensoren verwenden ESPnow und LoRa um mit einem Gateway zu kommunizieren. Das Gateway sendet die Messdaten an eine InfluxDB Datenbank. Es gibt ein Dashboard dass Grafana verwendet. Bei bestimmten Messwertüberschreitungen werden Alarm Meldungen über Telegram gesendet.
+
+- ergänze: Die Sensoren messen alle 30 Minuten. Dazwischen gehen sie in einen Stromsparmodus.
+
+- ergänze: die Sensormodule verwenden ESP8266 Mikrocontroller und DHT11 Sensoren. Als Batterien werden  3,7V  LiIon Akkus und 1,5V AAA LiIon Akkus verwendet. Das Gateway ist ebenfalls ESP8266 basiert. Die Datenbank und die Dashboards sind auf einem Raspberry Pi installiert. Die Entwicklungsplattform ist Visual Studio Code mit dem Plugin PlatformIO. 
