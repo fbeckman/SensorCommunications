@@ -2,8 +2,11 @@
 #define CREDENTIALS_H
 
 // WiFi parameters
-const char* ssid = "YOUR SSID";
-const char* password = "YOUR WIFI PASSWORD";
+const char* ssid1 = "YOUR SSID1";
+const char* password1 = "YOUR WIFI PASSWORD1";
+
+const char* ssid2 = "YOUR SSID2";
+const char* password1 = "YOUR WIFI PASSWORD2";
 
 // Telegram bot credentials
 #define botToken "YOUR TELEGRAM BOT TOKEN"
