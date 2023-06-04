@@ -7,10 +7,17 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <LoRa.h>
+#include <WiFiClientSecure.h>
+
+uint8_t mac[6] {0xBC, 0xFF, 0x4D, 0x5F, 0x74, 0x48};
+#define CHANNEL 1
 
 // WiFi parameters
 const char* ssid = "see Credentials.h";
 const char* password = "see Credentials.h";
+
+const char* dweetIoHost = "dweet.io";
+const char* sensorBaseName = "b3d84112-a54c-4548-a0a1-4d9acdec7589";
 
 //#define INFLUXDB_HOST "see Credentials.h"
 Influxdb influx(INFLUXDB_HOST);
@@ -26,8 +33,6 @@ typedef struct messageToBeReceived {
   short humidity;
   short voltage;
 } struct_message;
-
-#define lowBattery 2.95f
 
 messageToBeReceived incomingReadings;
 volatile bool doReadESPNow = false; // Flag set by callback to perform read process in main loop
@@ -69,6 +74,30 @@ void writeToInfluxDB() {
   Serial.printf("humidity: %4.2f \n", humidity);
   Serial.printf("voltage: %4.2f \n", voltage);
   Serial.println();
+}
+
+void writeToDweetIo() {
+  float temperature = incomingReadings.temperature/100.0f;
+  float humidity = incomingReadings.humidity/100.0f;
+  float voltage = incomingReadings.voltage/100.0f;
+  // Use WiFiClient class to create TCP connections
+  WiFiClientSecure client;
+  client.setInsecure();
+  const int httpPort = 443;
+  if (!client.connect("dweet.io", httpPort)) {
+    Serial.println("connection to dweet.io failed");
+    return;
+  }   
+  client.print(String("GET /dweet/for/") + String(sensorBaseName) + "?Sensor=" + String(incomingReadings.id) + "&temperature=" + String(temperature) + "&humidity=" + String(humidity) + "&voltage=" + String(voltage) + " HTTP/1.1\r\n" +
+              "Host: " + dweetIoHost + "\r\n" + 
+              "Connection: close\r\n\r\n"); 
+  delay(10);
+  
+  // Read all the lines of the reply from server and print them to Serial
+  while(client.available()){
+    String line = client.readStringUntil('\r');
+    Serial.print(line);
+  }
 }
 
 void setupLoRa() {
@@ -125,6 +154,11 @@ void setupWiFi(){
     Serial.println("No known network found. Please try later again.");
     exit(0);
   }
+
+  wifi_set_macaddr(0, const_cast<uint8*>(mac));
+  wifi_promiscuous_enable(true);
+  wifi_set_channel(CHANNEL);
+  wifi_promiscuous_enable(false);
  
   // Set device as a Wi-Fi Station
   WiFi.begin(ssid, password);
@@ -132,12 +166,13 @@ void setupWiFi(){
     delay(1000);
     Serial.println("Setting as a Wi-Fi Station..");
   }
+
   Serial.print("Station IP Address: ");
   Serial.println(WiFi.localIP());
   Serial.print("Wi-Fi Channel: ");
   Serial.println(WiFi.channel());
   Serial.print("Station MAC Address: ");
-  Serial.println(WiFi.macAddress());   
+  Serial.println(WiFi.macAddress());  
 }
 
 void setup() {
@@ -154,10 +189,12 @@ void setup() {
 void loop() {
    if (doReadESPNow) {
     writeToInfluxDB();
+    writeToDweetIo();
     doReadESPNow = false; // Set flag back to false so next read will happen only after next ISR event
   }  
   if (doReadLoRa) {
     writeToInfluxDB();
+    writeToDweetIo();
     doReadLoRa = false; // Set flag back to false so next read will happen only after next ISR event
   }  
 }

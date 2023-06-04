@@ -3,11 +3,11 @@
 #include <espnow.h>
 #include <DHT.h>
 
-#define BOARD_ID 13
+#define BOARD_ID 17
 
 // RECEIVER (gateway) MAC Address
-//uint8_t receiverAddress[] = {0x5C, 0xCF, 0x7F, 0xA2, 0xCA, 0x82}; //Breadboard NodeMCU
-uint8_t receiverAddress[] = {0xBC, 0xFF, 0x4D, 0x5F, 0x74, 0x48}; //Wemos D1 mini
+uint8_t receiverAddress[] = {0xBC, 0xFF, 0x4D, 0x5F, 0x74, 0x48};
+#define CHANNEL 1
 
 // Use DHT11 sensor at pin 4 (D2)
 #define DHTPIN D2
@@ -49,7 +49,7 @@ void setup() {
       gotoSleep();
   }
   esp_now_set_self_role(ESP_NOW_ROLE_COMBO);
-  uint8_t result = esp_now_add_peer(receiverAddress, ESP_NOW_ROLE_COMBO, 0, NULL, 0);
+  uint8_t result = esp_now_add_peer(receiverAddress, ESP_NOW_ROLE_COMBO, CHANNEL, NULL, 0);
   if(result != 0){
       gotoSleep();
   } 
